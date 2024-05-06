@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Auth\LoginController;
 use App\Controller\User\GetAuthorsController;
+use App\Controller\User\GetNonAuthorsController;
 use App\Entity\Lesson\Comment;
 use App\Entity\Lesson\Lesson;
 use App\Repository\UserRepository;
@@ -27,10 +29,21 @@ use Symfony\Component\Serializer\Attribute\Groups;
             controller: LoginController::class,
             name: 'users.login',
         ),
-        new Get(
+        new GetCollection(
             uriTemplate: '/users/authors',
             controller: GetAuthorsController::class,
             normalizationContext: ["groups" => ["users.pRead"]],
+            name: 'users.get.authors',
+        ),
+        new GetCollection(
+            uriTemplate: '/users',
+            controller: GetNonAuthorsController::class,
+            normalizationContext: ["groups" => ["users.pRead"]],
+            name: 'users.get.authors',
+        ),
+        new Get(
+            uriTemplate: '/users/{id}',
+            normalizationContext: ["groups" => ["users.fRead"]],
             name: 'users.get.authors',
         ),
     ]
@@ -44,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['lesson.fRead'])]
+    #[Groups(['lesson.fRead', 'users.pRead'])]
     private ?string $email = null;
 
     /**
@@ -68,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['lesson.fRead', 'users.pRead'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -87,7 +101,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $comments;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['lesson.fRead', 'lesson.pRead', 'users.pRead'])]
     private ?string $role = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $phoneNumber = null;
 
     public function __construct()
     {
@@ -286,6 +304,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRole(?string $role): static
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): static
+    {
+        $this->phoneNumber = $phoneNumber;
 
         return $this;
     }

@@ -129,19 +129,19 @@ class Lesson
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['lesson.pRead', 'lesson.fRead', 'category.fRead'])]
+    #[Groups(['lesson.pRead', 'lesson.fRead', 'category.fRead', 'users.fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['lesson.pRead', 'lesson.fRead', 'category.fRead'])]
+    #[Groups(['lesson.pRead', 'lesson.fRead', 'category.fRead', 'users.fRead'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['lesson.pRead', 'lesson.fRead'])]
+    #[Groups(['lesson.pRead', 'lesson.fRead', 'users.fRead'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['lesson.pRead', 'lesson.fRead', 'category.fRead'])]
+    #[Groups(['lesson.pRead', 'lesson.fRead', 'category.fRead', 'users.fRead'])]
     private ?string $imagePath = null;
 
     #[ORM\Column(length: 255)]
@@ -149,7 +149,7 @@ class Lesson
     private ?string $audioPath = null;
 
     #[ORM\ManyToOne(inversedBy: 'lessons')]
-    #[Groups(['lesson.fRead',])]
+    #[Groups(['lesson.fRead', 'users.fRead',])]
     private ?Category $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'lessons')]

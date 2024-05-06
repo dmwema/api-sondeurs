@@ -40,9 +40,10 @@ class RegisterController extends AbstractController
         $requiredKeys = [
             "email"       => "L'adresse E-mail est obligatoire.",
             "password"    => "Le mot de passe est obligatoire.",
+            "address"    => "Le mot de passe est obligatoire.",
+            "phone_number"    => "Le mot de passe est obligatoire.",
             "firstname"    => "Le prenom est obligatoire.",
             "lastname" => "Le nom est obligatoire.",
-            "address"    => "L'adresse est obligatoire.",
         ];
 
         $checkedFields = $this->authService->checkRequiredFields($requiredKeys, $content);
@@ -55,6 +56,7 @@ class RegisterController extends AbstractController
             $firstname = $content['firstname'];
             $lastname = $content['lastname'];
             $address = $content['address'];
+            $phoneNumber = $content['phone_number'];
 
             $userExists = $this->userRepository->findOneByEmail($email) !== null;
 
@@ -70,6 +72,7 @@ class RegisterController extends AbstractController
                     ->setFirstname($firstname)
                     ->setLastname($lastname)
                     ->setAddress($address)
+                    ->setRole('user')
                 ;
 
                 $hashedPassword = $this->passwordEncoder->hashPassword($user, $password);
@@ -87,10 +90,10 @@ class RegisterController extends AbstractController
             'message' => $message,
             'errorType' => $errorType,
             'token' => $token,
-            'account' => $user === null ? null : $this->userRepository->find($user->getId()),
+            'user' => $user === null ? null : $this->userRepository->find($user->getId()),
         ];
 
-        $response = $this->normalizer->normalize($return, null, ['groups' => 'user:pRead']);
+        $response = $this->normalizer->normalize($return, null, ['groups' => 'users.pRead']);
         return new JsonResponse($response, Response::HTTP_OK);
     }
 }

@@ -75,7 +75,7 @@ class LoginController extends AbstractController
             'user' => $user === null ? null : $this->userRepository->find($user->getId()),
         ];
 
-        $response = $this->normalizer->normalize($return, null, ['groups' => 'user:pRead']);
+        $response = $this->normalizer->normalize($return, null, ['groups' => 'users.pRead']);
         return new JsonResponse($response, Response::HTTP_OK);
     }
 }

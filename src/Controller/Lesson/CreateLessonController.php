@@ -31,9 +31,9 @@ class CreateLessonController extends AbstractController
          * @var User $user
          */
         $user = $this->getUser();
-//        if ($user === null) {
-//            throw $this->createAccessDeniedException();
-//        }
+        if ($user === null) {
+            throw $this->createAccessDeniedException();
+        }
 
         $title = $request->get('title');
         $description = $request->get('description');
@@ -55,7 +55,7 @@ class CreateLessonController extends AbstractController
                 ->setCategory($category)
                 ->setImagePath($imagePath)
                 ->setAudioPath($audioPath)
-                ->setAuthor($this->userRepository->find(2))
+                ->setAuthor($user)
             ;
             $this->lessonRepository->save($lesson, true);
         }
